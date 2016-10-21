@@ -46,9 +46,13 @@ app.get('/iterations/:id', (req, res) => {
       return res.status(500).json({success: false, data: err});
     }
     const id = parseInt(req.params.id)
-
+    var iteration;
     const query = client.query('SELECT id, body FROM iterations where id = $1', [id]);
-    query.on('end', (iteration) => {
+    query.on('row', function(row) {
+      iteration = row['body'];
+      iteration.id = row['id'];
+    });
+    query.on('end', () => {
       done()
       return res.json(iteration);
     });
@@ -65,7 +69,7 @@ app.post('/iterations', (req, res) => {
 
     const data = req.body;
     const query = client.query('INSERT INTO iterations (body) values ($1)', [data]);
-    query.on('end', (result) => {
+    query.on('end', () => {
       done();
       return res.status(201).json(data);
     });
@@ -85,7 +89,7 @@ app.put('/iterations/:id', (req, res) => {
     var data = req.body;
     data.id = id;
     const query = client.query('UPDATE iterations set body = $1 where id = $2', [data, id]);
-    query.on('end', (result) => {
+    query.on('end', () => {
       done();
       return res.json(data);
     });
