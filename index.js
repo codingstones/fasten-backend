@@ -18,7 +18,7 @@ app.get('/iterations', function(req, res) {
       return res.status(500).json({success: false, data: err});
     }
     const iterations = [];
-    const query = client.query('SELECT id, body FROM iterations');
+    const query = client.query('SELECT id, body FROM iterations order by id');
     
     query.on('row', function(row) {
       var iteration = row['body'];
@@ -62,7 +62,7 @@ app.post('/iterations', (req, res) => {
     const query = client.query('INSERT INTO iterations (body) values ($1)', [data]);
     query.on('end', (result) => {
       done();
-      return res.json(data);
+      return res.status(201).json(data);
     });
   });
 });
@@ -80,9 +80,26 @@ app.put('/iterations/:id', (req, res) => {
     var data = req.body;
     data.id = id;
     const query = client.query('UPDATE iterations set body = $1 where id = $2', [data, id]);
-    query.on('end', (err, result) => {
+    query.on('end', (result) => {
       done();
       return res.json(data);
+    });
+  });
+});
+
+app.delete('/iterations/:id', (req, res) => {
+  pg.connect(DATABASE_URL, function(err, client, done) {
+    if(err) {
+      done();
+      console.log(err);
+      return res.status(500).json({success: false, data: err});
+    }
+    const id = parseInt(req.params.id)
+
+    const query = client.query('DELETE FROM iterations WHERE id = $1', [id]);
+    query.on('end', (result) => {
+      done();
+      return res.status(204).send();
     });
   });
 });
