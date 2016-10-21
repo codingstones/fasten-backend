@@ -1,0 +1,14 @@
+{
+  "name": "fasten-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Dani Latorre <dani@danilat.com> (http://www.danilat.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.1.2"
+  }
+}
