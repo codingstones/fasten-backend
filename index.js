@@ -15,30 +15,30 @@ if (process.env.DATABASE_URL){
   pg.defaults.ssl = true;
 }
 
-app.get('/iterations', function(req, res) {
+app.get('/projects', function(req, res) {
   pg.connect(DATABASE_URL, function(err, client, done) {
     if(err) {
       done();
       console.log(err);
       return res.status(500).json({success: false, data: err});
     }
-    const iterations = [];
+    const projects = [];
     const query = client.query('SELECT id, body FROM iterations order by id');
     
     query.on('row', function(row) {
-      var iteration = row['body'];
-      iteration.id = row['id'];
-      iterations.push(iteration);
+      var project = row['body'];
+      project.id = row['id'];
+      projects.push(project);
     });
 
     query.on('end', () => {
       done()
-      return res.json(iterations);
+      return res.json(projects);
     });
   });
 });
 
-app.get('/iterations/:id', (req, res) => {
+app.get('/projects/:id', (req, res) => {
   pg.connect(DATABASE_URL, function(err, client, done) {
     if(err) {
       done();
@@ -46,20 +46,20 @@ app.get('/iterations/:id', (req, res) => {
       return res.status(500).json({success: false, data: err});
     }
     const id = parseInt(req.params.id)
-    var iteration;
+    var project;
     const query = client.query('SELECT id, body FROM iterations where id = $1', [id]);
     query.on('row', function(row) {
-      iteration = row['body'];
-      iteration.id = row['id'];
+      project = row['body'];
+      project.id = row['id'];
     });
     query.on('end', () => {
       done()
-      return res.json(iteration);
+      return res.json(project);
     });
   });
 });
 
-app.post('/iterations', (req, res) => {
+app.post('/projects', (req, res) => {
   pg.connect(DATABASE_URL, function(err, client, done) {
     if(err) {
       done();
@@ -76,8 +76,7 @@ app.post('/iterations', (req, res) => {
   });
 });
 
-
-app.put('/iterations/:id', (req, res) => {
+app.put('/projects/:id', (req, res) => {
   pg.connect(DATABASE_URL, function(err, client, done) {
     if(err) {
       done();
@@ -96,7 +95,7 @@ app.put('/iterations/:id', (req, res) => {
   });
 });
 
-app.delete('/iterations/:id', (req, res) => {
+app.delete('/projects/:id', (req, res) => {
   pg.connect(DATABASE_URL, function(err, client, done) {
     if(err) {
       done();

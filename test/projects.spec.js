@@ -6,21 +6,21 @@ var api = require('../index.js').app;
 
 var data = {'foo': 'bar'};
 
-describe('Iterations API', () => {
-  context('GET /iterations', () => {
+describe('Projects API', () => {
+  context('GET /projects', () => {
     it('respond with json', (done) => {
       request(api)
-        .get('/iterations')
+        .get('/projects')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
   });
 
-  context('POST /iterations', () => {
+  context('POST /projects', () => {
     it('stores a json', (done) =>{
       request(api)
-        .post('/iterations')
+        .post('/projects')
         .send(data)
         .expect(201)
         .expect('Content-Type', /json/)
@@ -32,22 +32,22 @@ describe('Iterations API', () => {
     });
   });
 
-  context('GET /iterations/:id', () =>{
+  context('GET /projects/:id', () =>{
     it('respond with json', (done) => {
       request(api)
-        .get('/iterations/1')
+        .get('/projects/1')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200, done)
     });
   });
 
-  context('PUT /iterations/:id', () =>{
+  context('PUT /projects/:id', () =>{
     var updatedData = {id: 1, 'cereal': 'panizo'};
 
     it('updates the json', (done) => {
       request(api)
-        .put('/iterations/'+updatedData.id)
+        .put('/projects/'+updatedData.id)
         .send(updatedData)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -59,16 +59,16 @@ describe('Iterations API', () => {
     });
   });
 
-  context('DELETE /iterations/:id', () =>{
-    it('deletes the iteration', (done) => {
+  context('DELETE /projects/:id', () =>{
+    it('deletes the project', (done) => {
       request(api)
-        .get('/iterations')
+        .get('/projects')
         .send(data)
         .end((err, res) => {
           if (err) throw err;
-          var lastIteration = res.body[res.body.length-1];
+          var lastProject = res.body[res.body.length-1];
           request(api)
-            .delete('/iterations/'+lastIteration.id)
+            .delete('/projects/'+lastProject.id)
             .expect(204, done);
         });
     });
